@@ -1,7 +1,7 @@
 import { Server } from "http";
 import app from "./app";
 
-const PORT = 3000;
+const PORT = 8000;
 
 let server: Server;
 
