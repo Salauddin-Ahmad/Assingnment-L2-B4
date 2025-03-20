@@ -1,6 +1,15 @@
-import express, { Request, Response, NextFunction } from 'express';
+import cookieParser from 'cookie-parser';
+import cors from 'cors';
+import express, { Request, Response, NextFunction, Application } from 'express';
+import router from './app/routes';
 
-const app = express();
+const app: Application = express();
+
+// Middleware
+app.use(express.json());
+app.use(cookieParser());
+app.use(cors({ origin: '*',credentials: true  })); //enable cookies 
+
 
 // Middleware to log requests
 app.use((req, res, next) => {
@@ -8,35 +17,15 @@ app.use((req, res, next) => {
   next();
 });
 
-// Sample Data (Could come from a Database)
-const users = [
-  { id: 1, name: "Alice", age: 25, role: "admin" },
-  { id: 2, name: "Bob", age: 30, role: "user" },
-  { id: 3, name: "Charlie", age: 35, role: "moderator" },
-];
+app.use('/api/v1/', router)
+
+// Simple GET API
 
 // Enhanced GET API with JSON Response and Query Params
 app.get('/', (req: Request, res: Response) => {
-  const { role, minAge } = req.query;
-
-  let filteredUsers = users;
-
-  // Apply role filter
-  if (role) {
-    filteredUsers = filteredUsers.filter(user => user.role === role);
-  }
-
-  // Apply minAge filter
-  if (minAge) {
-    filteredUsers = filteredUsers.filter(user => user.age >= Number(minAge));
-  }
-
   res.status(200).json({
     success: true,
-    message: "Welcome to our API!",
-    timestamp: new Date().toISOString().slice(0, 19).replace('T', ' '),
-    data: filteredUsers,
-    documentation: "Under development",
+    message: 'Hello World!',
   });
 });
 
